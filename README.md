@@ -1,6 +1,6 @@
 # HLClock
 
-![](Assets/time.jpg?raw=true "HLClock")
+![](HLClock/Assets/time.jpg?raw=true "HLClock")
 
 Hybrid Logical Clocks for iOS.
 
