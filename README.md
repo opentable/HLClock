@@ -1,5 +1,7 @@
 # HLClock
 
+![](Assets/time.jpg?raw=true "HLClock")
+
 Hybrid Logical Clocks for iOS.
 
 [![CI Status](http://img.shields.io/travis/Stephen Spalding/HLClock.svg?style=flat)](https://travis-ci.org/Stephen Spalding/HLClock)
@@ -19,6 +21,8 @@ This library contains tools to deal with problems related to clock offset.
 
 Hybrid logical clocks allow causal ordering between events even when those events are created on multiple devices with differing
 
+![](http://3.bp.blogspot.com/-akIvKFkOoPA/U9T0IFFDQsI/AAAAAAAABrQ/Bi7YfWAIaDE/s1600/counter2.png?raw=true "Hybrid Logicl Clock Example")
+
 See: http://muratbuffalo.blogspot.com/2014/07/hybrid-logical-clocks.html
 
 ### Network Time
@@ -28,6 +32,19 @@ Hybrid Logical Clocks are useful when clocks differ only slightly. iPads are kno
 A simple option is to maintain an offset based on the Date header received from the OAuth server. This can be performed upon initial login so that the clock is synced when the app starts. This should be sufficient to get the iPad's clock to within a few seconds of "true time".
 
 Another option is to employ NTP. NHNetworkTime is one NTP implementation that may be used: https://github.com/huynguyencong/NHNetworkTime
+
+## Usage
+
+```Swift
+import HLClock
+
+// Create a new timestamp
+let newTimestamp = HLClock.send()
+
+// Update clock when receiving a new message
+HLClock.recv(message.timestamp)
+
+```
 
 ## Example
 
