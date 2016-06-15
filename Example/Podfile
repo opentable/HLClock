@@ -1,0 +1,7 @@
+use_frameworks!
+target 'HLClock_Tests' do
+  pod 'HLClock', :path => '../'
+  
+  pod 'Quick', '~> 0.8'
+  pod 'Nimble', '~> 3.0'
+end
