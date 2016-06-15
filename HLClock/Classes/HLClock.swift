@@ -78,7 +78,7 @@ func swap (inout i: Int64, f: Int64 -> Int64) -> Int64 {
     while true {
         let p = i
         if OSAtomicCompareAndSwap64Barrier(p, f(p), &i) {
-            return i
+            return f(p)
         }
     }
 }

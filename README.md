@@ -6,7 +6,7 @@
 
 Hybrid Logical Clocks for iOS.
 
-[![CI Status](http://img.shields.io/travis/Stephen Spalding/HLClock.svg?style=flat)](https://travis-ci.org/Stephen Spalding/HLClock)
+[![CI Status](http://img.shields.io/travis/opentable/HLClock.svg?style=flat)](https://travis-ci.org/opentable/HLClock)
 [![Version](https://img.shields.io/cocoapods/v/HLClock.svg?style=flat)](http://cocoapods.org/pods/HLClock)
 [![License](https://img.shields.io/cocoapods/l/HLClock.svg?style=flat)](http://cocoapods.org/pods/HLClock)
 [![Platform](https://img.shields.io/cocoapods/p/HLClock.svg?style=flat)](http://cocoapods.org/pods/HLClock)
