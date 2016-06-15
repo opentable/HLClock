@@ -1,13 +1,16 @@
 # HLClock
 
-Hybrid Logical Clocks for iOS.
+`Time is an illusion. – Albert Einstein`
 
 ![](HLClock/Assets/time.jpg?raw=true "HLClock")
+
+Hybrid Logical Clocks for iOS.
 
 [![CI Status](http://img.shields.io/travis/Stephen Spalding/HLClock.svg?style=flat)](https://travis-ci.org/Stephen Spalding/HLClock)
 [![Version](https://img.shields.io/cocoapods/v/HLClock.svg?style=flat)](http://cocoapods.org/pods/HLClock)
 [![License](https://img.shields.io/cocoapods/l/HLClock.svg?style=flat)](http://cocoapods.org/pods/HLClock)
 [![Platform](https://img.shields.io/cocoapods/p/HLClock.svg?style=flat)](http://cocoapods.org/pods/HLClock)
+
 
 ## Overview
 
