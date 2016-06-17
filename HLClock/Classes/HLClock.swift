@@ -16,39 +16,37 @@ import Foundation
 import UIKit
 
 /// Send function as described in Figure 5 of HLC paper
-func hlc_send<L:IntegerType, C:IntegerType> (var j: (l:L, c:C), pt:L) -> (L, C) {
+func hlc_send<L:IntegerType, C:IntegerType> (j: (l:L, c:C), pt:L) -> (L, C) {
+    var j´ = j
     
-    let l´ = j.l
+    j´.l = max(j.l, pt)
     
-    j.l = max(l´, pt)
-    
-    if j.l == l´ {
-        j.c = j.c + 1
+    if j´.l == j.l {
+        j´.c = j.c + 1
     } else {
-        j.c = 0
+        j´.c = 0
     }
     
-    return j
+    return j´
 }
 
 /// Receive function as described in Figure 5 of HLC paper
-func hlc_recv<L:IntegerType, C:IntegerType> (var j: (l:L, c:C), m: (l:L, c:C), pt:L) -> (L, C) {
+func hlc_recv<L:IntegerType, C:IntegerType> (j: (l:L, c:C), m: (l:L, c:C), pt:L) -> (L, C) {
+    var j´ = j
     
-    let l´ = j.l
+    j´.l = max(j.l, m.l, pt)
     
-    j.l = max(l´, m.l, pt)
-    
-    if j.l == l´ && j.l == m.l {
-        j.c = max(j.c, m.c) + 1
-    } else if j.l == l´ {
-        j.c = j.c + 1
+    if j´.l == j.l && j´.l == m.l {
+        j´.c = max(j.c, m.c) + 1
+    } else if j´.l == j.l {
+        j´.c = j.c + 1
     } else if j.l == m.l {
-        j.c = m.c + 1
+        j´.c = m.c + 1
     } else {
-        j.c = 0
+        j´.c = 0
     }
     
-    return j
+    return j´
 }
 
 
