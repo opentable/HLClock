@@ -65,6 +65,12 @@ it, simply add the following line to your Podfile:
 pod "HLClock"
 ```
 
+## TODO
+
+ - [ ] Clock offset uses moving median
+ - [ ] Generate UUIDv1 using HLC timestamp
+ - [ ] Add quickcheck tests
+
 ## License
 
 HLClock is available under the MIT license. See the LICENSE file for more info.
