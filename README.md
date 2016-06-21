@@ -2,7 +2,7 @@
 
 `Time is an illusion. – Albert Einstein`
 
-![](HLClock/Assets/time.jpg?raw=true "HLClock")
+![](https://raw.githubusercontent.com/opentable/HLClock/master/HLClock/Assets/time.jpg?raw=true "HLClock")
 
 Hybrid Logical Clocks for iOS.
 
@@ -71,9 +71,11 @@ pod "HLClock"
  - [x] Make threadsafe using atomic swap
  - [x] Package as library, installable through cocoapods
  - [ ] Clock offset uses moving median
+ - [ ] Overflow and overdrift protection
  - [ ] Add hlclock usage to example app
  - [ ] Generate UUIDv1 using HLC timestamp
  - [ ] Add quickcheck tests
+ - [ ] Support SPM
 
 ## License
 
