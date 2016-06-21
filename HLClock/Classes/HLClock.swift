@@ -16,7 +16,7 @@ import Foundation
 import UIKit
 
 /// Send function as described in Figure 5 of HLC paper
-func hlc_send<L:IntegerType, C:IntegerType> (j: (l:L, c:C), pt:L) -> (L, C) {
+func send<L:IntegerType, C:IntegerType> (j: (l:L, c:C), pt:L) -> (L, C) {
     var j´ = j
     
     j´.l = max(j.l, pt)
@@ -31,7 +31,7 @@ func hlc_send<L:IntegerType, C:IntegerType> (j: (l:L, c:C), pt:L) -> (L, C) {
 }
 
 /// Receive function as described in Figure 5 of HLC paper
-func hlc_recv<L:IntegerType, C:IntegerType> (j: (l:L, c:C), m: (l:L, c:C), pt:L) -> (L, C) {
+func recv<L:IntegerType, C:IntegerType> (j: (l:L, c:C), m: (l:L, c:C), pt:L) -> (L, C) {
     var j´ = j
     
     j´.l = max(j.l, m.l, pt)
@@ -50,76 +50,42 @@ func hlc_recv<L:IntegerType, C:IntegerType> (j: (l:L, c:C), m: (l:L, c:C), pt:L)
 }
 
 
-
-/// Take ceiling to 48th bit
-func ceil48 ( t: Int64 ) -> Int64 {
-    return t & ~0xffff | 0x10000
-}
+// Pack and Unpack, see HLC paper: '6.2 Compact Timestamping using l and c'
 
 /// Pack l and c into 64bit timestamp
-/// See HLC paper: '6.2 Compact Timestamping using l and c'
-func hlc_pack( t: (l:Int64, c:Int64) ) -> Int64 {
+func pack( t: (l:Int64, c:Int64) ) -> Int64 {
     return ceil48(t.l) | t.c
 }
 
-func hlc_unpack( t: Int64 ) -> (l: Int64, c: Int64) {
+/// Unack l and c from 64bit timestamp
+func unpack( t: Int64 ) -> (l: Int64, c: Int64) {
     return (t & ~0xffff, t & 0xffff)
 }
 
-/// Current time in nanoseconds since epoch
-func now() -> Int64 {
-    return Int64(NSDate().timeIntervalSince1970 * 1e9)
-}
 
-/// Applies function `f` to Int64 `i` atomically
-func swap (inout i: Int64, f: Int64 -> Int64) -> Int64 {
-    while true {
-        let p = i
-        if OSAtomicCompareAndSwap64Barrier(p, f(p), &i) {
-            return f(p)
-        }
-    }
-}
-
-func toNanos (t: NSDate) -> Int64 {
-    return Int64(t.timeIntervalSince1970 * 1e9)
-}
-
-func fromNanos (t: Int64) -> NSDate {
-    return NSDate.init(timeIntervalSince1970: Double(t) / 1e9)
-}
-
+/// Hybrid Logical Clock.
 public class HLClock {
-    // Create global instance
-    static let global = HLClock()
+    /// Create global instance
+    static let global = HLClock(clock: NetworkTime.global.now)
     
     /// Clock state
-    private var j : Int64 = 0
+    var j : Int64 = 0
     
-    /// Physical Time offset in nanoseconds
-    var offsetNanos : Int64 = 0
+    /// Physical time generator
+    var clock : ()->Int64
     
-    /// Physical Time
-    static func pt() -> Int64 {
-        return ceil48(toNanos(NSDate()) + global.offsetNanos)
+    init (clock: ()->Int64 = NetworkTime.global.now) {
+        self.clock = clock
     }
     
-    // Wrap hlc_send and hlc_recv, unpacking inputs and packing outputs
-    public static func send() -> Int64 {
-        return swap(&global.j, f: {j in hlc_pack(hlc_send(hlc_unpack(j), pt: pt()))})
+    /// Get current time as HLC timestamp
+    public func now() -> Int64 {
+        return swap(&self.j, f: {j in pack(send(unpack(j), pt: ceil48(self.clock())))})
     }
     
-    public static func recv(m:Int64) -> Int64 {
-        return swap(&global.j,
-            f: {j in hlc_pack(hlc_recv(hlc_unpack(j), m: hlc_unpack(m), pt: pt()))})
-    }
-    
-    /// Update clock offset
-    public static func updateOffset(referenceTime: NSDate) -> Int64 {
-        let myTime = NSDate()
-        let delta = referenceTime.timeIntervalSince1970 - myTime.timeIntervalSince1970
-        let newOffset : Int64 = abs(delta) >= 1 ? Int64(delta * 1e9) : 0
-        return swap(&global.offsetNanos,
-            f: {current in abs(newOffset - current) >= Int64(1e9) ? newOffset : current})
+    /// Update internal state with received message
+    public func update(m:Int64) -> Int64 {
+        return swap(&self.j,
+            f: {j in pack(recv(unpack(j), m: unpack(m), pt: ceil48(self.clock())))})
     }
 }

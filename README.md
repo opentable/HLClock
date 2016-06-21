@@ -45,10 +45,10 @@ Another option is to employ NTP. NHNetworkTime is one NTP implementation that ma
 import HLClock
 
 // Create a new timestamp
-let newTimestamp = HLClock.send()
+let newTimestamp = HLClock.global.now()
 
 // Update clock when receiving a new message
-HLClock.recv(message.timestamp)
+HLClock.global.update(message.timestamp)
 
 ```
 
@@ -65,9 +65,13 @@ it, simply add the following line to your Podfile:
 pod "HLClock"
 ```
 
-## TODO
+## Punchlist
 
+ - [x] Implement HLC algorithm
+ - [x] Make threadsafe using atomic swap
+ - [x] Package as library, installable through cocoapods
  - [ ] Clock offset uses moving median
+ - [ ] Add hlclock usage to example app
  - [ ] Generate UUIDv1 using HLC timestamp
  - [ ] Add quickcheck tests
 
