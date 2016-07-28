@@ -66,7 +66,7 @@ func unpack( t: Int64 ) -> (l: Int64, c: Int64) {
 /// Hybrid Logical Clock.
 public class HLClock {
     /// Create global instance
-    static let global = HLClock(clock: NetworkTime.global.now)
+    public static let global = HLClock(clock: NetworkTime.global.now)
     
     /// Clock state
     var j : Int64 = 0
@@ -74,7 +74,7 @@ public class HLClock {
     /// Physical time generator
     var clock : ()->Int64
     
-    init (clock: ()->Int64 = NetworkTime.global.now) {
+    public init (clock: ()->Int64 = NetworkTime.global.now) {
         self.clock = clock
     }
     
