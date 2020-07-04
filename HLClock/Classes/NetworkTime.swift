@@ -10,7 +10,7 @@ import Foundation
 
 public class NetworkTime {
     // Create global instance
-    static let global = NetworkTime()
+    public static let global = NetworkTime()
     
     /// Physical Time offset in nanoseconds
     var offsetNanos : Int64 = 0
