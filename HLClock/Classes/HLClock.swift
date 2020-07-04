@@ -16,7 +16,7 @@ import Foundation
 import UIKit
 
 /// Send function as described in Figure 5 of HLC paper
-func send<L:IntegerType, C:IntegerType> (j: (l:L, c:C), pt:L) -> (L, C) {
+func send<L:FixedWidthInteger, C:FixedWidthInteger> (_ j: (l:L, c:C), pt:L) -> (L, C) {
     var j´ = j
     
     j´.l = max(j.l, pt)
@@ -31,7 +31,7 @@ func send<L:IntegerType, C:IntegerType> (j: (l:L, c:C), pt:L) -> (L, C) {
 }
 
 /// Receive function as described in Figure 5 of HLC paper
-func recv<L:IntegerType, C:IntegerType> (j: (l:L, c:C), m: (l:L, c:C), pt:L) -> (L, C) {
+func recv<L:FixedWidthInteger, C:FixedWidthInteger> (_ j: (l:L, c:C), m: (l:L, c:C), pt:L) -> (L, C) {
     var j´ = j
     
     j´.l = max(j.l, m.l, pt)
@@ -53,12 +53,12 @@ func recv<L:IntegerType, C:IntegerType> (j: (l:L, c:C), m: (l:L, c:C), pt:L) -> 
 // Pack and Unpack, see HLC paper: '6.2 Compact Timestamping using l and c'
 
 /// Pack l and c into 64bit timestamp
-func pack( t: (l:Int64, c:Int64) ) -> Int64 {
+func pack(_ t: (l:Int64, c:Int64) ) -> Int64 {
     return ceil48(t.l) | t.c
 }
 
 /// Unack l and c from 64bit timestamp
-func unpack( t: Int64 ) -> (l: Int64, c: Int64) {
+func unpack(_ t: Int64 ) -> (l: Int64, c: Int64) {
     return (t & ~0xffff, t & 0xffff)
 }
 
@@ -74,7 +74,7 @@ public class HLClock {
     /// Physical time generator
     var clock : ()->Int64
     
-    public init (clock: ()->Int64 = NetworkTime.global.now) {
+    public init (clock: @escaping ()->Int64 = NetworkTime.global.now) {
         self.clock = clock
     }
     
@@ -86,6 +86,6 @@ public class HLClock {
     /// Update internal state with received message
     public func update(m:Int64) -> Int64 {
         return swap(&self.j,
-            f: {j in pack(recv(unpack(j), m: unpack(m), pt: ceil48(self.clock())))})
+                    f: {j in pack(recv(unpack(j), m: unpack(m), pt: ceil48(self.clock())))})
     }
 }

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HLClock'
-  s.version          = '0.2.0'
+  s.version          = '0.3.0'
   s.summary          = 'Hybrid Logical Clocks for iOS.'
 
 # This description is used to generate tags and improve search results.
@@ -29,9 +29,11 @@ See: http://muratbuffalo.blogspot.com/2014/07/hybrid-logical-clocks.html
   s.source           = { :git => 'https://github.com/opentable/HLClock.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '12.0'
 
   s.source_files = 'HLClock/Classes/**/*'
+
+  s.swift_version = '5.0'
   
   # s.resource_bundles = {
   #   'HLClock' => ['HLClock/Assets/*.png']
